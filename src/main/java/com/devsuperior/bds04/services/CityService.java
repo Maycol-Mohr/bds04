@@ -8,6 +8,8 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,4 +60,12 @@ public class CityService {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
+	
+	@Transactional(readOnly = true)
+	public Page<CityDTO> findAllPaged(Pageable pageable) {
+		Page<City> list = repository.findAll(pageable);
+		return list.map(x -> new CityDTO(x));
+	}
+
+	 
 }
